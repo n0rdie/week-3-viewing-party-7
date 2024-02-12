@@ -46,4 +46,64 @@ RSpec.describe "User Registration" do
     # I'm taken to my dashboard page `/users/:id`
     expect(page).to have_content("User Two's Dashboard")
   end
+
+  it "User Story #2 - Registration (w/ Authentication) Sad Path - Passwords do not match" do
+    # When I visit `/register`
+    visit '/register'
+    # and I fail to fill in my name, unique email, OR matching passwords,
+    fill_in :user_name,  with: 'User Two'
+    fill_in :user_email, with: 'notunique@example.com'
+    fill_in :user_password, with: 'password123'
+    fill_in :user_password_confirmation, with: 'password'
+    click_button 'Create New User'
+    # I'm taken back to the `/register` page
+    expect(current_path).to eq('/register')
+    # and a flash message pops up, telling me what went wrong
+    expect(page).to have_content("Password confirmation doesn't match")
+  end
+
+  it "User Story #2 - Registration (w/ Authentication) Sad Path - No name" do
+    # When I visit `/register`
+    visit '/register'
+    # and I fail to fill in my name, unique email, OR matching passwords,
+    fill_in :user_name,  with: ''
+    fill_in :user_email, with: 'notunique@example.com'
+    fill_in :user_password, with: 'password123'
+    fill_in :user_password_confirmation, with: 'password123'
+    click_button 'Create New User'
+    # I'm taken back to the `/register` page
+    expect(current_path).to eq('/register')
+    # and a flash message pops up, telling me what went wrong
+    expect(page).to have_content("Name can't be blank")
+  end
+
+  it "User Story #2 - Registration (w/ Authentication) Sad Path - No email" do
+    # When I visit `/register`
+    visit '/register'
+    # and I fail to fill in my name, unique email, OR matching passwords,
+    fill_in :user_name,  with: 'User Two'
+    fill_in :user_email, with: ''
+    fill_in :user_password, with: 'password123'
+    fill_in :user_password_confirmation, with: 'password123'
+    click_button 'Create New User'
+    # I'm taken back to the `/register` page
+    expect(current_path).to eq('/register')
+    # and a flash message pops up, telling me what went wrong
+    expect(page).to have_content("Email can't be blank")
+  end
+
+  it "User Story #2 - Registration (w/ Authentication) Sad Path - No password" do
+    # When I visit `/register`
+    visit '/register'
+    # and I fail to fill in my name, unique email, OR matching passwords,
+    fill_in :user_name,  with: 'User Two'
+    fill_in :user_email, with: 'notunique@example.com'
+    fill_in :user_password, with: ''
+    fill_in :user_password_confirmation, with: ''
+    click_button 'Create New User'
+    # I'm taken back to the `/register` page
+    expect(current_path).to eq('/register')
+    # and a flash message pops up, telling me what went wrong
+    expect(page).to have_content("Password can't be blank")
+  end
 end
