@@ -24,4 +24,22 @@ RSpec.describe "User Registration" do
     expect(current_path).to eq(register_path)
     expect(page).to have_content("Email has already been taken")
   end
+
+  it "User Story #1 - Registration (w/ Authentication) Happy Path" do
+    # When I visit `/register`
+    visit '/register'
+    # I see a form to fill in my name, email, password, and password confirmation.
+    expect(page).to have_field(:user_name)
+    expect(page).to have_field(:user_email)
+    expect(page).to have_field(:user_password_1)
+    expect(page).to have_field(:user_password_2)
+    # When I fill in that form with my name, email, and matching passwords,
+    fill_in :user_name,  with: 'User Two'
+    fill_in :user_email, with: 'notunique@example.com'
+    fill_in :user_password_1, with: 'password'
+    fill_in :user_password_2, with: 'password'
+    click_button 'Create New User'
+    # I'm taken to my dashboard page `/users/:id`
+    expect(page).to have_content("User Two's Dashboard")
+  end
 end
