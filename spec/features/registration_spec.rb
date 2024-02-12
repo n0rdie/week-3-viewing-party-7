@@ -6,6 +6,8 @@ RSpec.describe "User Registration" do
 
     fill_in :user_name, with: 'User One'
     fill_in :user_email, with:'user1@example.com'
+    fill_in :user_password, with: 'password123'
+    fill_in :user_password_confirmation, with: 'password123'
     click_button 'Create New User'
 
     expect(current_path).to eq(user_path(User.last.id))
@@ -13,12 +15,14 @@ RSpec.describe "User Registration" do
   end 
 
   it 'does not create a user if email isnt unique' do 
-    User.create(name: 'User One', email: 'notunique@example.com')
+    User.create(name: 'User One', email: 'notunique@example.com', password: "password123", password_confirmation: "password123")
 
     visit register_path
     
     fill_in :user_name, with: 'User Two'
     fill_in :user_email, with:'notunique@example.com'
+    fill_in :user_password, with: 'password123'
+    fill_in :user_password_confirmation, with: 'password123'
     click_button 'Create New User'
 
     expect(current_path).to eq(register_path)
@@ -31,13 +35,13 @@ RSpec.describe "User Registration" do
     # I see a form to fill in my name, email, password, and password confirmation.
     expect(page).to have_field(:user_name)
     expect(page).to have_field(:user_email)
-    expect(page).to have_field(:user_password_1)
-    expect(page).to have_field(:user_password_2)
+    expect(page).to have_field(:user_password)
+    expect(page).to have_field(:user_password_confirmation)
     # When I fill in that form with my name, email, and matching passwords,
     fill_in :user_name,  with: 'User Two'
     fill_in :user_email, with: 'notunique@example.com'
-    fill_in :user_password_1, with: 'password'
-    fill_in :user_password_2, with: 'password'
+    fill_in :user_password, with: 'password123'
+    fill_in :user_password_confirmation, with: 'password123'
     click_button 'Create New User'
     # I'm taken to my dashboard page `/users/:id`
     expect(page).to have_content("User Two's Dashboard")
