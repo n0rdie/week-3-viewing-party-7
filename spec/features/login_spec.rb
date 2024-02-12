@@ -23,4 +23,17 @@ RSpec.describe 'Landing Page' do
         # I'm taken to my dashboard page
         expect(page).to have_content("User One's Dashboard")
     end
+
+    it 'User Story #4 - Logging In Sad Path' do
+        # And click on the link to go to my dashboard
+        click_on "Log In"
+        # And fail to fill in my correct credentials 
+        fill_in :email, with: "user1@test.com"
+        fill_in :password, with: "wrong"
+        click_button "Log In"
+        # I'm taken back to the Log In page
+        expect(current_path).to eq("/login")
+        # And I can see a flash message telling me that I entered incorrect credentials.
+        expect(page).to have_content("Sorry, your credentials are bad.")
+    end
 end
