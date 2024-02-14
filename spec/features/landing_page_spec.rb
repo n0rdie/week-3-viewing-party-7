@@ -40,4 +40,28 @@ RSpec.describe 'Landing Page' do
       expect(page).to have_content(user2.email)
     end     
   end 
+
+  it '5: Logged-in users no longer see links on Landing Page' do 
+    user1 = User.create(name: "User One", email: "user1@test.com", password: "password123", password_confirmation: "password123")
+    user2 = User.create(name: "User Two", email: "user2@test.com", password: "password123", password_confirmation: "password123")
+
+    # As a logged-in user
+    click_on "Log In"
+    fill_in :email, with: "user1@test.com"
+    fill_in :password, with: "password123"
+    fill_in :location, with: "Denver, CO"
+    click_button "Log In"
+    visit '/'
+
+    expect(page).to have_content('Existing Users:')
+
+    # The list of existing users is no longer a link to their show pages
+    # But just a list of email addresses
+    within('.existing-users') do 
+      expect(page).to have_content(user1.email)
+      expect(page).to have_content(user2.email)
+      expect(page).to_not have_link(user1.email)
+      expect(page).to_not have_link(user2.email)
+    end     
+  end
 end
