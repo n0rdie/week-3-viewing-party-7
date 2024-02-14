@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe 'Landing Page' do
-    before :each do 
-        user1 = User.create(name: "User One", email: "user1@test.com", password: "password123", password_confirmation: "password123")
-        user2 = User.create(name: "User Two", email: "user2@test.com", password: "password123", password_confirmation: "password123")
+    before(:each) do 
+        @user1 = User.create(name: "User One", email: "user1@test.com", password: "password123", password_confirmation: "password123")
+        @user2 = User.create(name: "User Two", email: "user2@test.com", password: "password123", password_confirmation: "password123")
         visit '/'
     end 
 
@@ -55,5 +55,20 @@ RSpec.describe 'Landing Page' do
         visit '/login'
         # I still see my location that I entered previously already typed into the Location field.
         expect(page).to have_field "Location:", with: "Denver, CO"
+    end
+
+    it "2: Remember a user upon successful log in/registration" do
+        # when I log in successfully
+        click_on "Log In"
+        fill_in :email, with: "user1@test.com"
+        fill_in :password, with: "password123"
+        fill_in :location, with: "Denver, CO"
+        click_button "Log In"
+        # and then leave the website and navigate to a different website entirely,
+        visit "http://www.google.com"
+        # Then when I return to *this* website, 
+        visit "/users/#{@user1.id}"
+        # I see that I am still logged in. 
+        expect(page).to have_content("User One's Dashboard")
     end
 end
