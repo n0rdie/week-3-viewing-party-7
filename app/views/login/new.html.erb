@@ -9,5 +9,7 @@
   <%= form.text_field :email, required: true %><br>
   <%= form.label :password, "Password:" %>
   <%= form.text_field :password, required: true %><br>
+  <%= form.label :location, "Location:" %>
+  <%= form.text_field :location, value: cookies[:location], required: false %><br>
   <%= form.submit "Log In" %>
 <% end %>

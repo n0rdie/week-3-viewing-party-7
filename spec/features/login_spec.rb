@@ -36,4 +36,24 @@ RSpec.describe 'Landing Page' do
         # And I can see a flash message telling me that I entered incorrect credentials.
         expect(page).to have_content("Sorry, your credentials are bad.")
     end
+
+    it "1: Implement a Cookie" do
+        # when I go to the login page (/login)
+        click_on "Log In"
+        # Under the normal login fields (username, password)
+        fill_in :email, with: "user1@test.com"
+        fill_in :password, with: "password123"
+        # I also see a text input field for "Location"
+        expect(page).to have_field(:location)
+        # When I enter my city and state in this field (e.g. "Denver, CO")
+        fill_in :location, with: "Denver, CO"
+        # and successfully log in
+        click_button "Log In"
+        # I see my location on the landing page as I entered it.
+        expect(page).to have_content("Denver, CO")
+        # Then, when I log out and return to the login page
+        visit '/login'
+        # I still see my location that I entered previously already typed into the Location field.
+        expect(page).to have_field "Location:", with: "Denver, CO"
+    end
 end

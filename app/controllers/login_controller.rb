@@ -6,6 +6,8 @@ class LoginController < ApplicationController
     def create
         user = User.find_by(email: params[:email])
         if user.authenticate(params[:password])
+            cookies[:user_id] = user.id.to_s
+            cookies[:location] = params[:location]
             redirect_to "/users/#{user.id}"
         else
             flash[:error] = "Sorry, your credentials are bad."
