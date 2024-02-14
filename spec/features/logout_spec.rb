@@ -32,18 +32,9 @@ RSpec.describe 'Landing Page' do
         expect(page).to have_button("Create New User")
     end
 
-    it "2: Remember a user upon successful log in/registration" do
-        # when I log in successfully
-        click_on "Log In"
-        fill_in :email, with: "user1@test.com"
-        fill_in :password, with: "password123"
-        fill_in :location, with: "Denver, CO"
-        click_button "Log In"
-        # and then leave the website and navigate to a different website entirely,
-        visit "http://www.google.com"
-        # Then when I return to *this* website, 
-        visit "/users/#{@user1.id}"
-        # I see that I am still logged in. 
-        expect(page).to have_content("User One's Dashboard")
+    it "4: Logged-out users see limited info on Landing Page" do
+        # I do not see the section of the page that lists existing users
+        expect(page).to_not have_content("user1@test.com")
+        expect(page).to_not have_content("user2@test.com")
     end
 end
